@@ -48,7 +48,7 @@ public sealed record MergeConfiguration(
                 .Where(d => d.IsReady && d.DriveType is DriveType.Fixed or DriveType.Removable)
                 .Select(d => d.RootDirectory.FullName.TrimEnd('\\'))
                 .FirstOrDefault(d => !d.Equals(protectedDrive, StringComparison.OrdinalIgnoreCase));
-            string recoveryTree = Path.Combine((secondDrive ?? protectedDrive) + Path.DirectorySeparatorChar, "Recovery");
+            string recoveryTree = Path.Combine((secondDrive ?? protectedDrive) + Path.DirectorySeparatorChar, "ScionRecovery");
             string scionFolder = Path.Combine(protectedDrive + Path.DirectorySeparatorChar, "Scion");
 
             return

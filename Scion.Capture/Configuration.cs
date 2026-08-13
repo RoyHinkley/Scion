@@ -80,7 +80,7 @@ public sealed record CaptureConfiguration(
 
         string data = Path.Combine(drive + Path.DirectorySeparatorChar, "Data");
         if (Directory.Exists(data))
-            candidates.Add("/Data");
+            candidates.Add(@"\Data");
 
         return NormalizeProtectedFolders(candidates, drive, scionFolder);
     }
@@ -112,14 +112,14 @@ public sealed record CaptureConfiguration(
 
     private static string NormalizeProtectedFolder(string folder)
     {
-        string value = folder.Trim().Replace('\\', '/');
-        if (value.Length == 0 || value[0] != '/')
+        string value = folder.Trim().Replace('/', '\\');
+        if (value.Length == 0 || value[0] != '\\')
             throw new InvalidDataException($"Protected folder must be a full path from the drive root without a drive designation: {folder}");
-        if (value.Length >= 2 && value[1] == '/')
+        if (value.Length >= 2 && value[1] == '\\')
             throw new InvalidDataException($"Protected folder is not a drive-relative path: {folder}");
         if (value.Contains(':'))
             throw new InvalidDataException($"Protected folder must not contain a drive designation: {folder}");
-        return value.Length > 1 ? value.TrimEnd('/') : value;
+        return value.Length > 1 ? value.TrimEnd('\\') : value;
     }
 
     private static string NormalizeDrive(string value)
@@ -142,7 +142,7 @@ public sealed record CaptureConfiguration(
     private static string ToDriveRelative(string path, string drive)
     {
         string normalized = PathUtility.NormalizeDirectory(path);
-        return normalized[drive.Length..].Replace('\\', '/');
+        return normalized[drive.Length..];
     }
 
     private static void RewriteProtectedFoldersIfNeeded(string path, IReadOnlyList<string> folders)

@@ -10,7 +10,7 @@ See `DESIGN.md` for the system design and rationale.
 
 ## Installation
 
-1. Copy the executables. Put `scion-capture.exe` in a program folder (e.g., `/Programs/Scion`) on each computer to be **protected**. Copy `scion-merge.exe` to each **collector** (computers that will merge the captured scions into a recovery tree). When only a single computer is to be protected, both programs can go in the same folder.
+1. Copy the executables. Put `scion-capture.exe` in a program folder (e.g., `\Programs\Scion`) on each computer to be **protected**. Copy `scion-merge.exe` to each **collector** (computers that will merge the captured scions into a recovery tree). When only a single computer is to be protected, both programs can go in the same folder.
 
 2. Run each executable once to generate a default configuration file. Review and edit the generated `.ini` files according to your needs.
 
@@ -48,7 +48,7 @@ To make portable, single-file executables instead, run:
 ```text
 dotnet publish
 ```
-This generates the two standalone executables, placing them in the `Scion/Publish` folder. You can also publish from within Visual Studio by right-clicking on each program project in Solution Explorer and selecting "Publish..."
+This generates the two standalone executables, placing them in the `Scion\Publish` folder. You can also publish from within Visual Studio by right-clicking on each program project in Solution Explorer and selecting "Publish..."
 
 ## scion-capture
 
@@ -65,10 +65,10 @@ The `.ini` file contains the configuration for a protected drive. On each runt, 
 An alternate configuration can be specified on the command line:
 
 ```text
-scion-capture --config D:\ScionConfigs\work.ini
+scion-capture --config driveE.ini
 ```
 
-The state and log files share the same base path (`work.state` and `work.log`). Each protected NTFS drive requires its own configuration.
+The state and log files share the same base path (`driveE.state` and `driveE.log`). Each protected NTFS drive requires its own configuration.
 
 On first execution, scion-capture creates any missing configuration and log files. The default `ProtectedDrive` is the Windows system drive. The generated protected-folder list contains Desktop, Documents, Pictures, Music, Videos, and Downloads when those Windows **Known Folders** reside on the protected drive. If a `\Data` folder exists on the drive, it is included as well. `ScionFolder` defaults to `\Scion` on the protected drive.
 
@@ -80,13 +80,13 @@ ScionFolder=C:\Scion
 
 # Full paths from the protected drive root, without the drive designation.
 [ProtectedFolders]
-/Data
-/Users/Jim/Desktop
-/Users/Jim/Documents
-/Users/Jim/Downloads
-/Users/Jim/Music
-/Users/Jim/Pictures
-/Users/Jim/Videos
+\Data
+\Users\Jim\Desktop
+\Users\Jim\Documents
+\Users\Jim\Downloads
+\Users\Jim\Music
+\Users\Jim\Pictures
+\Users\Jim\Videos
 
 [Settings]
 ConfirmationsRequired=1
@@ -94,7 +94,7 @@ stdout=normal
 log=normal
 ```
 
-Files anywhere beneath a protected folder are eligible for capture. The complete folder structure below the protected drive root is preserved. Thus `C:\Users\Jim\Documents\Letter.docx` is stored in a scion as `Users\Jim\Documents\Letter.docx` and, for example, ultimately appears as `E:\Recovery\Users\Jim\Documents\Letter.docx` when `RecoveryTree` is `E:\Recovery`.
+Files anywhere beneath a protected folder are eligible for capture. The complete folder structure below the protected drive root is preserved. Thus `C:\Users\Jim\Documents\Letter.docx` is stored in a scion as `Users\Jim\Documents\Letter.docx` and, for example, ultimately appears as `E:\ScionRecovery\Users\Jim\Documents\Letter.docx` when `RecoveryTree` is `E:\ScionRecovery`.
 
 Set ConfirmationsRequired to the number of **collectors** that merge the protected files into their recovery trees. Maintaining multiple, separate recovery options on other drives and computers significantly reduces the probability of an unrecoverable loss.
 
@@ -132,7 +132,7 @@ stdout=normal
 log=normal
 ```
 
-On first execution, merge chooses a second ready fixed or removable drive for `RecoveryTree` when one is available; otherwise it falls back to `\Recovery` on the Windows system drive. A same-drive recovery tree still protects against many accidental deletions, overwrites, and similar mistakes, but it does not provide protection against failure or loss of that drive.
+On first execution, merge chooses a second ready fixed or removable drive for `RecoveryTree` when one is available; otherwise it falls back to `\ScionRecovery` on the Windows system drive. A same-drive recovery tree still protects against many accidental deletions, overwrites, and similar mistakes, but it does not provide protection against failure or loss of that drive.
 
 Scion folders are processed in listed order. Recognized scions are processed oldest first. Each top-level folder within a scion is duplicated beneath the recovery-tree root, preserving the path below the protected drive root. Only files contained within folders in the scion are merged; top-level files such as collector confirmation files are ignored. The newest modification timestamp wins. Exact timestamp ties retain the file already present.
 

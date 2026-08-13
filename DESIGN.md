@@ -39,7 +39,7 @@ A file qualifies when its resolved path lies beneath any protected folder. Once 
 ```text
 C:\Users\Jim\Documents\Letter.docx
     -> scion Users\Jim\Documents\Letter.docx
-    -> E:\Recovery\Users\Jim\Documents\Letter.docx
+    -> E:\ScionRecovery\Users\Jim\Documents\Letter.docx
 ```
 
 This makes overlapping protected folders harmless. Capture nevertheless normalizes `[ProtectedFolders]` by removing duplicates and folders already covered by a parent protected folder, then sorting the list.
@@ -104,7 +104,7 @@ After every file in a scion has been copied or safely skipped, the collector cre
 
 ## Capture and merge cadence
 
-Capture and merge intentionally have independent schedules. Capture can run frequently because journal processing scales primarily with the amount of change rather than the total protected tree.
+Capture and merge are intended to have independent schedules. Capture can run frequently because journal processing scales primarily with the amount of change rather than the total protected tree.
 
 Merge can run less frequently. A useful policy is frequent multiple daily captures with a single daily merge performed when the system is likely to be inactive. If only one capture is performed per merge, then perform the merge first. The recovery tree then retains a somewhat older durable state while newer changes remain available in recent scions. This provides a convenient tolerance for recently discovered mistakes without implementing general version history.
 
