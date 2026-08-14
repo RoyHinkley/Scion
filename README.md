@@ -1,4 +1,4 @@
-# Scion
+# <img src="artwork/scion.svg" alt="scion logo" height="24px" width="auto"> Scion
 
 **scion** ("sigh-uhn") - A small twig or bud taken from a plant to be grafted onto another plant root.
 
