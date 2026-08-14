@@ -17,17 +17,17 @@ See `DESIGN.md` for the system design and rationale.
 3. Create Windows Task Scheduler jobs for the capture and merge operations. Capture requires administrative access to the NTFS journal.
 
 ## Special Terms
-- **Protected** Describes file storage monitored by Scion for changes. Changes to files anywhere beneath a protected folder are detected and the altered files are copied into scions. Protected computers are those that periodically run `scion-capture`. Each protected drive has an associated configuration file in which its protected folders are identified. Protected files are those within or beneath protected folders.
+- **Protected** - Describes file storage monitored by Scion for changes. Changes to files anywhere beneath a protected folder are detected and the altered files are copied into scions. Protected computers are those that periodically run `scion-capture`. Each protected drive has an associated configuration file in which its protected folders are identified. Protected files are those within or beneath protected folders.
 
-- **Scions** Temporary copies of recently changed files, preserved in their original folder structure.
+- **Scions** - Temporary copies of recently changed files, preserved in their original folder structure.
 
-- **Recovery tree** The durable tree of merged scions containing all of the recoverable files.
+- **Recovery tree** - The durable tree of merged scions containing all of the recoverable files.
 
-- **Capture** The `scion-capture` program runs on protected computers to identify recently changed files and save copies of them into scions.
+- **Capture** - The `scion-capture` program runs on protected computers to identify recently changed files and save copies of them into scions.
 
-- **Merge** The `scion-merge` program merges scions from protected computers into a durable recovery tree.
+- **Merge** - The `scion-merge` program merges scions from protected computers into a durable recovery tree.
 
-- **Collector** A computer that uses `scion-merge` to maintain a recovery tree.
+- **Collector** - A computer that uses `scion-merge` to maintain a recovery tree.
 
 ## Building
 The `Scion` 'solution' contains three Visual Studio projects for building two programs:
@@ -60,9 +60,9 @@ scion-capture.state
 scion-capture.log
 ```
 
-The `.ini` file contains the configuration for a protected drive. On each runt, the program records a summary of the operation in the `.log` file. The program also maintains a `.state` file with checkpoint information, so it can later pick up where it left off.
+The `.ini` file contains the configuration for a protected drive. At the end of each run, the program records a summary of the operation in the `.log` file. The program also maintains a `.state` file with checkpoint information, so it can later pick up where it left off.
 
-An alternate configuration can be specified on the command line:
+An alternate configuration (for a different drive) can be specified on the command line:
 
 ```text
 scion-capture --config driveE.ini
@@ -132,9 +132,9 @@ stdout=normal
 log=normal
 ```
 
-On first execution, merge chooses a second ready fixed or removable drive for `RecoveryTree` when one is available; otherwise it falls back to `\ScionRecovery` on the Windows system drive. A same-drive recovery tree still protects against many accidental deletions, overwrites, and similar mistakes, but it does not provide protection against failure or loss of that drive.
+On first execution, merge chooses a second NTFS drive for the `RecoveryTree`, if one is available; otherwise it falls back to `\ScionRecovery` on the Windows system drive. A same-drive recovery tree provides some protection against many accidental deletions, overwrites, and similar mistakes, but it does not provide protection against failure or loss of the drive.
 
-Scion folders are processed in listed order. Recognized scions are processed oldest first. Each top-level folder within a scion is duplicated beneath the recovery-tree root, preserving the path below the protected drive root. Only files contained within folders in the scion are merged; top-level files such as collector confirmation files are ignored. The newest modification timestamp wins. Exact timestamp ties retain the file already present.
+Scion folders are processed in listed order. LAN shares (like '\\ServerA\Data') are supported, enabling multiple protected computers to be merged into a single recovery tree. This is particularly convenient when LAN computers share a common local data storage convention. Scions are processed oldest first. Each top-level folder within a scion is duplicated beneath the recovery-tree root, preserving the path below the protected drive's root. Only files contained within (or beneath) folders in the scion are merged; top-level files in the scion folder, such as collector confirmation files, are ignored. When merging, the newest modification timestamp wins. Exact timestamp ties retain the file already present.
 
 ## Exit codes
 
